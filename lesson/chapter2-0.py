@@ -156,8 +156,8 @@ s1 = set([1, 2, 3, 4])
 s2 = set([3, 4, 5, 6])
 
 s1.union(s2)  # {1,2,3,4,5,6}
-sl.intersection(s2)  # {3,4}
-s1.difference(s2)  # {1,2}
+s1.intersection(s2)  # {3,4} 교집합
+s1.difference(s2)  # {1,2} 
 
 
 # 불리언
