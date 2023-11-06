@@ -16,15 +16,15 @@ print(var3)  # 퀀트_포트_폴리오_만들기
 # 문자열 나누기
 var10 = "퀸트 투자 포트폴리오 만들기"
 var11 = var10.split(" ")
-print(var11)
+print(var11)  # ['퀸트', '투자', '포트폴리오', '만들기']
 
 # 문자열 인덱싱, 슬라이싱
 str1 = "Quant"
-print("인덱싱 2", str1[2])
-print("인덱싱 -2", str1[-2])
-print("인덱싱 0:3", str1[0:3])
-print("인덱싱 :2", str1[:2])
-print("인덱싱 3:", str1[3:])
+print("인덱싱 2", str1[2])  # a
+print("인덱싱 -2", str1[-2])  # n
+print("인덱싱 0:3", str1[0:3])  # Qua   0~2가지의 숫자
+print("인덱싱 :2", str1[:2])  # Qa
+print("인덱싱 3:", str1[3:])  # nt
 
 # 리스트
 a = []
@@ -40,7 +40,7 @@ list_sample = [1, 2, ["a", "b", "c"], "d"]
 list_sample[0]  # 1
 list_sample[2]  # ["a", "b", "c]
 list_sample[2][0]  # "a"
-list_sample[0:1]  # 1,2
+print("list_sample[0:1]", list_sample[0:1])  # 1
 
 # 리스트 연산
 a = [1, 2, 3]
@@ -63,20 +63,20 @@ var.append(
 var.extend([4, 5])  # [1,2,3,4,5]
 
 # 리스트의 수정과 삭제
-var = [1, 2, 3, 4, 5]
-var[2] = 10  # 1,2,10,4,5
+var5 = [1, 2, 3, 4, 5]
+var5[2] = 10  # 1,2,10,4,5
 
-var[3] = ["a", "b", "c"]  # [1,2,3,["a", "b", "c"],5]
+var5[3] = ["a", "b", "c"]  # [1,2,3,["a", "b", "c"],5]
 
-var[0:2] = ["가", "나"]  # ["가","나",3,4,5] 0:2는 0~1까지의 데이터를 의미
+var5[0:2] = ["가", "나"]  # ["가","나",3,4,5] 0:2는 0~1까지의 데이터를 의미
 
 del var[0]  # [2,3,4,5]
 
-var[0:1] = []  # [2,3,4,5]
+var5[0:1] = []  # [2,3,4,5]
 
-var.remove(1)  # [2,3,4,5] remove(x)는 첫번째로 나오는 x을 삭제
+# var5.remove(1)  # [2,3,4,5] remove(x)는 첫번째로 나오는 x을 삭제
 
-var.pop()  # 5 pop()메소드는 마지막 값을 반환하고 삭제한다. print(var) => [1,2,3,4]
+var5.pop()  # 5 pop()메소드는 마지막 값을 반환하고 삭제한다. print(var) => [1,2,3,4]
 
 
 # 리스트의 정렬
@@ -157,7 +157,7 @@ s2 = set([3, 4, 5, 6])
 
 s1.union(s2)  # {1,2,3,4,5,6}
 s1.intersection(s2)  # {3,4} 교집합
-s1.difference(s2)  # {1,2} 
+s1.difference(s2)  # {1,2}
 
 
 # 불리언
@@ -174,7 +174,7 @@ type(var)  # bool
 
 bool(0)  # False
 bool(1)  # True
-bool(none)  # False
+bool(None)  # False
 bool("")  # False
 bool([])  # False
 bool({})  # False
