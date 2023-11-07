@@ -54,7 +54,7 @@ series_22 = pd.Series([4, 5, 6])
 
 series_33 = series_11 + series_22
 print(series_33)  # 5 7 9 인덱스가 같은 값끼리 더해짐
-print(series_11 * 2)
+print(series_11 * 2)  # 2,4,6
 
 # ! DataFrame 데이터 프레임 : 2차원 배열 - 엑셀의 형열표
 
@@ -115,7 +115,7 @@ df3.drop("행3", axis=0, inplace=True)
 df3.drop("열3", axis=1, inplace=True)
 print(df3)
 
-# ?행과 열을 선택하기
+# ? 행과 열을 선택하기
 dict_data2 = {
     "col1": [1, 2, 3, 4],
     "col2": [5, 6, 7, 8],
@@ -127,6 +127,11 @@ print(df)
 print(df["col1"])
 print(df.col1)
 print(df[["col1", "col2"]])  # 대괄호 2개는 데이터프레임 형태반환
+#       col1  col2
+# idx1     1     5
+# idx2     2     6
+# idx3     3     7
+# idx4     4     8
 
 print(df.loc["idx1"])  # return Series
 print(df.iloc[0])  # return Series
