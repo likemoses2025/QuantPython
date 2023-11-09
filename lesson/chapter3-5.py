@@ -51,7 +51,7 @@ print(result)
 # 10  A10  B10  C10  D10
 # 11  A11  B11  C11  D11
 
-
+# ? 행합치기
 result1 = pd.concat([df1, df4])
 print(result1)
 #      A   B    C   D    F
@@ -64,8 +64,18 @@ print(result1)
 # 2  NaN  B6  NaN  D6   F6
 # 3  NaN  B7  NaN  D7   F7
 
+# ? 열 합치기
 result2 = pd.concat([df1, df4], axis=1)
 print(result2)
+#     A   B   C   D   B   D   F
+# 0  A0  B0  C0  D0  B2  D2  F2
+# 1  A1  B1  C1  D1  B3  D3  F3
+# 2  A2  B2  C2  D2  B6  D6  F6
+# 3  A3  B3  C3  D3  B7  D7  F7
+
+# ? 교집합 합치기
+result3 = pd.concat([df1, df4], axis=1, join="inner")
+print(result3)
 #     A   B   C   D   B   D   F
 # 0  A0  B0  C0  D0  B2  D2  F2
 # 1  A1  B1  C1  D1  B3  D3  F3
