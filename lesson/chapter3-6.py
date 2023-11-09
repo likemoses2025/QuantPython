@@ -112,3 +112,8 @@ right = pd.DataFrame(
 
 result = left.join(right)
 print(result)
+#      A   B    C    D
+# K0  A0  B0   C0   D0
+# K1  A1  B1   C1   D1
+# K2  A2  B2  NaN  NaN
+# K3  A3  B3   C2   D2

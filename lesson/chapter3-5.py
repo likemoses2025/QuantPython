@@ -35,6 +35,8 @@ df4 = pd.DataFrame(
     }
 )
 
+s1 = pd.Series(["X0", "X1", "X2", "X3"], name="X")
+
 result = pd.concat([df1, df2, df3])
 print(result)
 #       A    B    C    D
@@ -81,3 +83,7 @@ print(result3)
 # 1  A1  B1  C1  D1  B3  D3  F3
 # 2  A2  B2  C2  D2  B6  D6  F6
 # 3  A3  B3  C3  D3  B7  D7  F7
+
+# ? 시리즈 합치기
+result4 = pd.concat([df1, s1], axis=1)
+print(result4)
