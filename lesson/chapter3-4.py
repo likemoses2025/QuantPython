@@ -3,6 +3,7 @@ import pandas as pd
 
 #! 새로운 열 만들기
 df = sns.load_dataset("mpg")
+print(df)
 
 df["ratio"] = (df["mpg"] / df["weight"]) * 100
 print(df.head())
