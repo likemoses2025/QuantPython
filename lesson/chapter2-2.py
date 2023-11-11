@@ -74,5 +74,3 @@ for i in a:
 print(result)  # [1,4,9]
 result = [i**2 for i in a]  # [실행 for 변수 in 리스트 ]
 print(result)
-
-####### 페이지 36

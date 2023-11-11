@@ -40,7 +40,7 @@ print(capital["Korea"])  # Seoul
 print(capital[["Korea", "Japan"]])  # Seoul Tokyo
 print(capital[0])  # Seoul
 print(capital[1])  # Tokyo
-print(capital[[0, 3]])  # type: ignore
+print(capital[[0, 3]])  # type: ignore [[]] ==> 데이터프레임으로 나타남
 # Korea        Seoul
 # India    New Delhi
 print(capital[0:3])  # Tokyo
