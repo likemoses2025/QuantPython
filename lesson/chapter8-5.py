@@ -50,4 +50,45 @@ driver.find_element(
     By.XPATH,
     value="/html/body/div[3]/div[2]/div/div[1]/div/div[2]/ul/li[2]/div/div/a[2]",
 ).click()
-#! 213 page부터 하기
+
+# @ Page Down - 윈도우에서 가장 하단까지 스크롤 명령어
+driver.execute_script("window.scrollTo(0,document.body.scrollHeight);")
+# driver.find_element(By.TAG_NAME, value="body").send_keys(Keys.PAGE_DOWN)
+
+# @ Page Down - 모든 페이지가 나올때까지 스크롤 다운 실행
+# ? 현재의 창높이를 prev_height에 저장
+prev_height = driver.execute_script("return document.body.scrollHeight")
+
+while True:
+    # ? 셀레니움을 통해 가장 하단까지 스크롤 내림
+    driver.execute_script("window.scrollTo(0,document.body.scrollHeight);")
+    # ? 2초 쉬기
+    time.sleep(2)
+    # ? 현재의 높이를 curr_height에 저장
+    curr_height = driver.execute_script("return document.body.scrollHeight")
+    # ? 현재의 높이와 이전의 높이가 같다면(더이상 인피니티스크롤이 없다면) 종료
+    if curr_height == prev_height:
+        break
+    # ? 현재의 높이를 이전 높이로 저장하고 처름부터 실행
+    prev_height = curr_height
+
+html = BeautifulSoup(driver.page_source, "lxml")
+txt = html.find_all(class_="title_link _cross_trigger")
+print("scraping", txt)
+# [<a class="title_link _cross_trigger" data-cr-gdid="90000004_00AFDF200003A61F00000000" href="https://cafe.naver.com/vilab/239135?art=ZXh0ZXJuYWwtc2VydmljZS1uYXZlci1zZWFyY2gtY2FmZS1wcg.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjYWZlVHlwZSI6IkNBRkVfVVJMIiwiY2FmZVVybCI6InZpbGFiIiwiYXJ0aWNsZUlkIjoyMzkxMzUsImlzc3VlZEF0IjoxNzAwNzI5MTQ1NjE5fQ.qPn5IITC8S2phjNE_t0Atxk64ESQguoK4MYlKcExu84" onclick="return goOtherCR(this, 'a=rvw*c.link&amp;r=1&amp;i=90000004_00AFDF200003A61F00000000&amp;u='+urlencode(this.href))" target="_blank">투자에 정답을 얻는 책읽기(투자 독서 모임)</a>, <a class="title_link _cross_trigger" data-cr-gdid="90000004_00AFDF200003A5ED00000000" href="https://cafe.naver.com/vilab/239085?art=ZXh0ZXJuYWwtc2VydmljZS1uYXZlci1zZWFyY2gtY2FmZS1wcg.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjYWZlVHlwZSI6IkNBRkVfVVJMIiwiY2FmZVVybCI6InZpbGFiIiwiYXJ0aWNsZUlkIjoyMzkwODUsImlzc3VlZEF0IjoxNzAwNzI5MTQ1NjE5fQ.wDm4l
+txt_list = [i.get_text() for i in txt]
+print(txt_list[0:10])
+# [
+#     "투자에 정답을 얻는 책읽기(투자 독서 모임)",
+#     "투자의 정답을 얻는 책읽기(투자 독서 모임)",
+#     "투자의 정답을 얻는 책읽기(주식 투자 독서 모임 모집)",
+#     "투자의 정답을 얻는 책읽기(투자 독서 모임)",
+#     "《헤지펀드 열전》(완역 개정판) 맛보기 pdf 파일",
+#     "[서평] 과거의 검증, 미래의 투자",
+#     "[서평] 과거의 검증, 미래의 투자 (어려운 시기를 이겨내는 최선의 투자법을 찾아서) / 안티 일마넨...",
+#     "20231011 멱(冪)파레토 독서법",
+#     "Post 형식의 웹 데이터를 크롤링 해보자",
+#     "최근 읽은 책 2권",
+# ]
+# @ 열려있는 창 종료
+driver.quit()
