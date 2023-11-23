@@ -27,3 +27,27 @@ driver.page_source[1:1000]
 # driver.find_element(By.LINK_TEXT, value="뉴스").click()
 # driver.back()  # ? 뒤로가기
 driver.find_element(By.CLASS_NAME, value="search_input").send_keys("퀀트투자 포트폴리오 만들기")
+driver.find_element(By.CLASS_NAME, value="btn_search").send_keys(Keys.ENTER)
+
+driver.find_element(By.CLASS_NAME, value="box_window").clear()  # 검색어 삭제
+driver.find_element(By.CLASS_NAME, value="box_window").send_keys("이현열 퀀트")  # 검색창 입력
+driver.find_element(By.CLASS_NAME, value="bt_search").click()  # 서치 버튼 클릭
+
+# @ XPATH : xml 중 특정 값의 태그나 속성을 찾기 쉽게 만든 주소 //*[@id="lnb"]/div[1]/div/div[1]/div/div[1]/div[2]/a
+# 네이버 View Tab으로 이동
+driver.find_element(
+    By.XPATH,
+    value="/html/body/div[3]/div[1]/div/div[2]/div[1]/div/div[1]/div/div[1]/div[1]",
+).click()
+
+
+driver.find_element(
+    By.XPATH,
+    value="/html/body/div[3]/div[2]/div/div[1]/div/div[1]/div/div[2]/a",
+).click()
+
+driver.find_element(
+    By.XPATH,
+    value="/html/body/div[3]/div[2]/div/div[1]/div/div[2]/ul/li[2]/div/div/a[2]",
+).click()
+#! 213 page부터 하기
