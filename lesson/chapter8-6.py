@@ -6,7 +6,7 @@ import pandas as pd
 # ? driver.close() : 현재 탭 닫기
 # ? driver.quit() : 브라우저 닫기
 # ? driver.back() : 뒤로가기
-# ? driver.forward() : 뒤로가기
+# ? driver.forward() : 앞으로가기
 
 # ! 셀레니움 명령어 - 엘리먼트 접근
 # ? By.ID : 태그의 아이디값 으로 추출
