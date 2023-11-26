@@ -221,3 +221,57 @@ print(kor_ticker[kor_ticker["종목명"].str.endswith("리츠")]["종목명"].va
 #     "코람코라이프인프라리츠"
 #     "한화리츠"
 # ]
+
+# @ 종목을 구분하기
+import numpy as np
+
+kor_ticker["종목구분"] = np.where(
+    kor_ticker["종목명"].str.contains("스팩|제[0-9]+호"),
+    "스팩",
+    np.where(
+        kor_ticker["종목코드"].str[-1:] != "0",
+        "우선주",
+        np.where(
+            # "리츠" 로 끝나는 종목명
+            kor_ticker["종목명"].str.endswith("리츠"),
+            "리츠",
+            np.where(kor_ticker["종목명"].isin(diff), "기타", "보통주"),
+        ),
+    ),
+)
+
+kor_ticker = kor_ticker.reset_index(drop=True)
+kor_ticker.columns = kor_ticker.columns.str.replace(" ", "")
+kor_ticker = kor_ticker[
+    ["종목코드", "종목명", "시장구분", "종가", "시가총액", "기준일", "EPS", "선행EPS", "BPS", "주당배당금", "종목구분"]
+]
+# ? sql에서는 nan이 입력불가로 None로 변경
+kor_ticker = kor_ticker.replace({np.nan: None})
+# ? 기준일을 to_datetime을 통해 yyyymmdd 에서 yyyy-mm-dd로 변경
+kor_ticker["기준일"] = pd.to_datetime(kor_ticker["기준일"])
+print(kor_ticker.head())
+#      종목코드      종목명   시장구분      종가           시가총액        기준일      EPS    선행EPS      BPS   주당배당금 종목구분
+# 0  095570   AJ네트웍스  KOSPI    4155   188025213645 2023-11-24    201.0    612.0   8076.0   270.0  보통주
+# 1  006840    AK홀딩스  KOSPI   17950   237793719950 2023-11-24     None     None  41948.0   200.0  보통주
+# 2  027410      BGF  KOSPI    3535   338358856185 2023-11-24    247.0     None  16528.0   110.0  보통주
+# 3  282330   BGF리테일  KOSPI  131100  2265920076600 2023-11-24  11203.0  12456.0  55724.0  4100.0  보통주
+# 4  138930  BNK금융지주  KOSPI    7130  2296490562940 2023-11-24   2404.0   2440.0  30468.0   625.0  보통주
+
+# ! mysql 삽입
+import pymysql
+
+con = pymysql.connect(
+    user="root", passwd="!!akswhr23", host="127.0.0.1", db="stock_db", charset="utf8"
+)
+mycursor = con.cursor()
+query = f"""
+    insert into kor_ticker (종목코드, 종목명, 시장구분, 종가, 시가총액, 기준일, EPS, 선행EPS, BPS, 주당배당금, 종목구분)
+    values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) as new on duplicate key update
+    종목명=new.종목명,시장구분=new.시장구분,종가=new.종가,시가총액=new.시가총액,EPS=new.EPS,선행EPS=new.선행EPS,BPS=new.BPS,주당배당금=new.주당배당금,종목구분=new.종목구분;
+"""
+args = kor_ticker.values.tolist()
+mycursor.executemany(query, args)
+con.commit()
+con.close()
+
+print(args)
