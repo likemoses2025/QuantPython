@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 패키지 불러오기
 import pymysql
 from sqlalchemy import create_engine
@@ -84,7 +83,7 @@ for i in tqdm(range(0, len(ticker_list))):
 # DB 연결 종료
 engine.dispose()
 con.close()
-=======
+
 import pandas as pd
 
 # ! 재무재표 크롤링
@@ -204,4 +203,3 @@ print(fiscal_data_text)
 # ['12']
 
 # ! 페이지 250
->>>>>>> 4c12af451286726e0965755adf5471580f79112d

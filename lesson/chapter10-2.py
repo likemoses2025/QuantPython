@@ -1,11 +1,9 @@
-<<<<<<< HEAD
 from dateutil.relativedelta import relativedelta
 import requests as rq
 from io import BytesIO
 from datetime import date
 from sqlalchemy import create_engine
 import pandas as pd
-=======
 import _pickle
 
 
@@ -28,7 +26,6 @@ import requests as rq
 import time
 from tqdm import tqdm
 from io import BytesIO
->>>>>>> 4c12af451286726e0965755adf5471580f79112d
 
 # DB 연결
 engine = create_engine("mysql+pymysql://root:!!akswhr23@127.0.0.1:3306/stock_db")
@@ -63,7 +60,6 @@ print("TICKER_LIST", ticker_list)
 
 # DB 저장 쿼리
 query = """
-<<<<<<< HEAD
 select * from kor_ticker
 where 기준일 = (select max(기준일) from kor_ticker) 
 	and 종목구분 = '보통주';
@@ -92,13 +88,12 @@ print(data_price.head())
 # 2  ["20181129"  9410.0  9410.0  9260.0  9360.0   47101.0      8.47]         NaN
 # 3  ["20181130"  9370.0  9380.0  9100.0  9110.0  123667.0       8.5]         NaN
 # 4  ["20181203"  9230.0  9430.0  9230.0  9370.0   68336.0      8.53]         NaN
-=======
-    insert into kor_price (날짜, 시가, 고가, 저가, 종가, 거래량, 종목코드)
-    values (%s,%s,%s,%s,%s,%s,%s) as new
-    on duplicate key update
-    시가 = new.시가, 고가 = new.고가, 저가 = new.저가,
-    종가 = new.종가, 거래량 = new.거래량;
-"""
+
+# insert into kor_price (날짜, 시가, 고가, 저가, 종가, 거래량, 종목코드)
+# values (%s,%s,%s,%s,%s,%s,%s) as new
+# on duplicate key update
+# 시가 = new.시가, 고가 = new.고가, 저가 = new.저가,
+# 종가 = new.종가, 거래량 = new.거래량;
 
 # 오류 발생시 저장할 리스트 생성
 error_list = []
@@ -107,13 +102,12 @@ error_list = []
 for i in tqdm(range(0, len(ticker_list))):
     # 티커 선택
     ticker = ticker_list["종목코드"][i]
->>>>>>> 4c12af451286726e0965755adf5471580f79112d
 
     # 시작일과 종료일
     fr = (date.today() + relativedelta(years=-5)).strftime("%Y%m%d")
     to = (date.today()).strftime("%Y%m%d")
 
-<<<<<<< HEAD
+
 import re
 
 # @ 모든 행을 선택하고 열은 6개만 선택
@@ -147,39 +141,37 @@ price["종목코드"] = ticker
 # 2 2018-11-29  9410.0  9410.0  9260.0  9360.0   47101.0  000020
 # 3 2018-11-30  9370.0  9380.0  9100.0  9110.0  123667.0  000020
 # 4 2018-12-03  9230.0  9430.0  9230.0  9370.0   68336.0  000020
-=======
-    # 오류 발생 시 이를 무시하고 다음 루프로 진행
-    try:
-        # url 생성
-        url = f"""https://fchart.stock.naver.com/siseJson.nhn?symbol={ticker}&requestType=1
+
+# 오류 발생 시 이를 무시하고 다음 루프로 진행
+try:
+    # url 생성
+    url = f"""https://fchart.stock.naver.com/siseJson.nhn?symbol={ticker}&requestType=1
         &startTime={fr}&endTime={to}&timeframe=day"""
 
-        # 데이터 다운로드
-        data = rq.get(url).content
-        data_price = pd.read_csv(BytesIO(data))
+    # 데이터 다운로드
+    data = rq.get(url).content
+    data_price = pd.read_csv(BytesIO(data))
 
-        # 데이터 클렌징
-        price = data_price.iloc[:, 0:6]
-        price.columns = ["날짜", "시가", "고가", "저가", "종가", "거래량"]
-        price = price.dropna()
-        price["날짜"] = price["날짜"].str.extract("(\d+)")
-        price["날짜"] = pd.to_datetime(price["날짜"])
-        price["종목코드"] = ticker
+    # 데이터 클렌징
+    price = data_price.iloc[:, 0:6]
+    price.columns = ["날짜", "시가", "고가", "저가", "종가", "거래량"]
+    price = price.dropna()
+    price["날짜"] = price["날짜"].str.extract("(\d+)")
+    price["날짜"] = pd.to_datetime(price["날짜"])
+    price["종목코드"] = ticker
 
-        # 주가 데이터를 DB에 저장
-        args = price.values.tolist()
-        mycursor.executemany(query, args)
-        con.commit()
-
-    except:
-        # 오류 발생시 error_list에 티커 저장하고 넘어가기
-        print(ticker)
-        error_list.append(ticker)
-
+    # 주가 데이터를 DB에 저장
+    args = price.values.tolist()
+    mycursor.executemany(query, args)
+    con.commit()
+except:
+    # 오류 발생시 error_list에 티커 저장하고 넘어가기
+    print(ticker)
+    error_list.append(ticker)
     # 타임슬립 적용
     time.sleep(2)
+
 
 # DB 연결 종료
 
 con.close()
->>>>>>> 4c12af451286726e0965755adf5471580f79112d
