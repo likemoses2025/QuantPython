@@ -272,6 +272,3 @@ query = f"""
 args = kor_ticker.values.tolist()
 mycursor.executemany(query, args)
 con.commit()
-con.close()
-
-print(args)
