@@ -98,20 +98,77 @@ print(data_fs_y.head())
 # 3  판매비와관리비계산에 참여한 계정 펼치기   1155.0   1269.0   1511.0   1235.0
 # 4                    인건비    415.0    468.0    489.0    455.0
 
-# @ 데이터 크롤링
 import requests as rq
 from bs4 import BeautifulSoup
 import re
 
 page_data = rq.get(url)
 page_data_html = BeautifulSoup(page_data.content, "html.parser")
+# print("page_data_html", page_data_html)
 
-fiscal_data = page_data_html.select("div.corp_group1 > h2")
-print(fiscal_data)
-# [<h2>000020</h2>, <h2>12월 결산</h2>]
+fiscal_data = page_data_html.select("div.corp_group1>h2")
+# print("fiscal_data", fiscal_data)
+# fiscal_data [<h2>000020</h2>, <h2>12월 결산</h2>]
+
 fiscal_data_text = fiscal_data[1].text
-#  ? 숫자 부분만 추출
+# print(fiscal_data_text)
+# 12월 결산
+
 fiscal_data_text = re.findall("[0-9]+", fiscal_data_text)
 
 print(fiscal_data_text)
 # ['12']
+
+data_fs_y = data_fs_y.loc[
+    :, (data_fs_y.columns == "계정") | (data_fs_y.columns.str[-2:].isin(fiscal_data_text))
+]  # type: ignore
+print(data_fs_y.head())
+
+# NaN 삭제
+data_fs_y[data_fs_y.loc[:, ~data_fs_y.columns.isin(["계정"])].isna().all(axis=1)].head()
+print(
+    data_fs_y[
+        data_fs_y.loc[:, ~data_fs_y.columns.isin(["계정"])].isna().all(axis=1)
+    ].head()
+)
+#                       계정  2020/12  2021/12  2022/12
+# 10               기타원가성비용      NaN      NaN      NaN
+# 18              대손충당금환입액      NaN      NaN      NaN
+# 19              매출채권처분이익      NaN      NaN      NaN
+# 20  당기손익-공정가치측정 금융자산관련이익      NaN      NaN      NaN
+# 23            금융자산손상차손환입      NaN      NaN      NaN
+
+print(data_fs_y["계정"].value_counts(ascending=False).head())
+# 계정
+# 기타          4
+# 배당금수익       3
+# 파생상품이익      3
+# 이자수익        3
+# 법인세납부(-)    3
+# Name: count, dtype: int64
+
+
+def clean_fs(df, ticker, frequency):
+    # 계정에서 Nan 데이터 제거
+    df = df[~df.loc[:, ~df.columns.isin(["계정"])].isna().all(axis=1)]
+    # drop_duplicates를 통해 중복 데이터를 처음 것만 남긴다
+    df = df.drop_duplicates(["계정"], keep="first")
+    # 열로 긴 데이터를 행으로 긴 데이터로 변경
+    df = pd.melt(df, id_vars="계정", var_name="기준일", value_name="값")  # type: ignore
+    # 계정값이 없는 항목 제거
+    df = df[~pd.isnull(df["값"])]
+    # 불필요한 이름 제거
+    df["계정"] = df["계정"].replace({"계산에 참여한 계정 펼치기": ""}, regex=True)
+    # to_datatime()를 통해 기준일을 yyyy-mm 형태로 변경. MonthEnd()를 통해 월말에 해당하는 일을 붙인다
+    df["기준일"] = (
+        pd.to_datetime(df["기준일"], format="%Y-%m") + pd.tseries.offsets.MonthEnd()
+    )  # type: ignore
+    df["종목코드"] = ticker
+    df["공시구분"] = frequency
+
+    return df
+
+
+data_fs_y_clean = clean_fs(data_fs_y, ticker, "y")
+
+print(data_fs_y_clean.head())
