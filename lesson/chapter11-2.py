@@ -81,7 +81,7 @@ all_data_df_bind = all_data_df_bind.drop_duplicates(["Symbol"])
 all_data_df_bind.reset_index(inplace=True, drop=True)
 all_data_df_bind = all_data_df_bind.replace({np.nan: None})
 
-driver.quit()
+# driver.quit()
 
 import pymysql
 
